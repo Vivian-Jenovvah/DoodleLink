@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Collaborative Canvas
 
 Collaborative Canvas is a Java 21 desktop application: a JavaFX/FXML client sends typed STOMP operations to a Spring Boot service, which persists PostgreSQL operations and versioned JSONB snapshots before broadcasting committed updates.
@@ -45,3 +46,7 @@ The PostgreSQL Testcontainers test runs when Docker is available. The remaining 
 ## Verification boundaries
 
 The project includes the real PostgreSQL/Flyway configuration and Testcontainers coverage. Manual two-client UI verification still requires a local JDK 21, Gradle and Docker. In restricted Windows shells, Gradle may need permission to use its standard native cache; this is an environment constraint, not a runtime application dependency.
+=======
+# DoodleLink
+DoodleLink is a real-time collaborative desktop drawing application that allows multiple users to draw together on a shared canvas. Users connect to the same server, create or join rooms using unique room IDs, and see drawing changes instantly through WebSocket communication.
+>>>>>>> feeacb7b9f9d65d27d5a6ad172fadc487bd86725
