@@ -1,0 +1,6 @@
+package com.collaborativecanvas.server.service;
+import com.collaborativecanvas.server.entity.*;import com.collaborativecanvas.server.repository.*;import com.fasterxml.jackson.databind.ObjectMapper;import org.junit.jupiter.api.Test;import java.util.*;import static org.junit.jupiter.api.Assertions.*;import static org.mockito.ArgumentMatchers.any;import static org.mockito.Mockito.*;
+class RoomServiceTest {
+ @Test void createsRoomAndInitialSnapshot(){RoomRepository rooms=mock(RoomRepository.class);CanvasSnapshotRepository snapshots=mock(CanvasSnapshotRepository.class);when(rooms.existsByRoomCode(any())).thenReturn(false);RoomService service=new RoomService(rooms,snapshots,new ObjectMapper());service.ttlHours=24;var response=service.create("  Alex  ");assertEquals("Alex",response.displayName());assertTrue(response.roomId().matches("[A-Z2-9]{8}"));verify(rooms).save(any(RoomEntity.class));verify(snapshots).save(argThat(s->s.snapshotSequenceNumber==0&&s.schemaVersion==1));}
+ @Test void rejectsInvalidDisplayNames(){RoomService service=new RoomService(mock(RoomRepository.class),mock(CanvasSnapshotRepository.class),new ObjectMapper());assertThrows(IllegalArgumentException.class,()->service.cleanName(" "));assertThrows(IllegalArgumentException.class,()->service.cleanName("x".repeat(33)));}
+}

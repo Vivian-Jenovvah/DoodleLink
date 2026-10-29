@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: collaborative-canvas-server
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:collaborative_canvas}
+    username: ${DB_USERNAME:canvas_app}
+    password: ${DB_PASSWORD:change_me_locally}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+  websocket:
+    servlet:
+      max-text-message-size: 65536
+server:
+  port: ${SERVER_PORT:8080}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+canvas:
+  room:
+    inactive-ttl-hours: ${ROOM_INACTIVE_TTL_HOURS:24}
+    retention-grace-days: ${ROOM_RETENTION_GRACE_DAYS:7}
+    cleanup-millis: 3600000
+  snapshot:
+    operation-threshold: ${CANVAS_SNAPSHOT_OPERATION_THRESHOLD:100}
+    interval-millis: ${CANVAS_SNAPSHOT_INTERVAL_SECONDS:30}000
+    keep-count: 3
+logging:
+  level:
+    com.collaborativecanvas: INFO

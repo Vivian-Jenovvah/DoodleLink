@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.collaborativecanvas.client.controller.CanvasController" styleClass="app-root, workspace-root">
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="14" styleClass="topbar">
+            <padding><Insets top="12" right="18" bottom="12" left="18"/></padding>
+            <Label text="C" styleClass="topbar-mark" accessibleText="Collaborative Canvas"/>
+            <VBox spacing="1"><Label text="Collaborative Canvas" styleClass="brand"/><Label text="SHARED WORKSPACE" styleClass="brand-caption"/></VBox>
+            <Separator orientation="VERTICAL" styleClass="topbar-divider"/>
+            <VBox spacing="3">
+                <Label text="ROOM CODE" styleClass="topbar-label"/>
+                <HBox alignment="CENTER_LEFT" spacing="6"><Label fx:id="roomIdLabel" styleClass="room-code" accessibleText="Current room code"/><Button text="Copy" onAction="#copyId" styleClass="copy-button" accessibleText="Copy room code"><tooltip><Tooltip text="Copy the room code to your clipboard."/></tooltip></Button></HBox>
+            </VBox>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Label fx:id="connectionLabel" text="Connecting" styleClass="connection" accessibleText="Connection status"/>
+            <Button text="Leave room" onAction="#leave" styleClass="ghost-button" accessibleText="Leave room"/>
+        </HBox>
+    </top>
+    <left>
+        <VBox spacing="16" prefWidth="224" minWidth="196" styleClass="tool-panel">
+            <padding><Insets top="20" right="16" bottom="20" left="16"/></padding>
+            <VBox spacing="4"><Label text="DRAWING TOOLS" styleClass="panel-kicker"/><Label text="Make your mark" styleClass="panel-title"/></VBox>
+            <VBox spacing="8">
+                <ToggleButton fx:id="brushButton" text="Brush" onAction="#brush" maxWidth="1.7976931348623157E308" styleClass="tool-button" accessibleText="Use brush tool"><tooltip><Tooltip text="Draw with the selected color and brush size."/></tooltip></ToggleButton>
+                <ToggleButton fx:id="eraserButton" text="Eraser" onAction="#eraser" maxWidth="1.7976931348623157E308" styleClass="tool-button" accessibleText="Use eraser tool"><tooltip><Tooltip text="Erase marks from the shared canvas."/></tooltip></ToggleButton>
+            </VBox>
+            <Separator styleClass="panel-separator"/>
+            <VBox spacing="9">
+                <Label text="INK" styleClass="panel-kicker"/>
+                <ColorPicker fx:id="colorPicker" accessibleText="Brush color" maxWidth="1.7976931348623157E308" styleClass="color-picker"/>
+                <HBox spacing="8"><Button text="Blue" onAction="#presetBlue" HBox.hgrow="ALWAYS" maxWidth="1.7976931348623157E308" styleClass="swatch-button, blue-swatch" accessibleText="Use blue ink"/><Button text="Ink" onAction="#presetBlack" HBox.hgrow="ALWAYS" maxWidth="1.7976931348623157E308" styleClass="swatch-button, ink-swatch" accessibleText="Use dark ink"/></HBox>
+            </VBox>
+            <VBox spacing="9">
+                <HBox alignment="CENTER_LEFT"><Label text="BRUSH SIZE" styleClass="panel-kicker"/><Pane HBox.hgrow="ALWAYS"/><Label fx:id="sizeLabel" text="6 px" styleClass="size-value"/></HBox>
+                <Slider fx:id="sizeSlider" min="1" max="50" value="6" blockIncrement="1" accessibleText="Brush size"/>
+            </VBox>
+            <Pane VBox.vgrow="ALWAYS"/>
+            <VBox spacing="7" styleClass="danger-zone"><Label text="CANVAS ACTIONS" styleClass="panel-kicker"/><Button fx:id="clearButton" text="Clear canvas" onAction="#clear" maxWidth="1.7976931348623157E308" styleClass="danger-button" accessibleText="Clear shared canvas"><tooltip><Tooltip text="Remove all marks for everyone in this room."/></tooltip></Button></VBox>
+        </VBox>
+    </left>
+    <center>
+        <VBox spacing="10" styleClass="workspace-center">
+            <padding><Insets top="16" right="18" bottom="12" left="18"/></padding>
+            <HBox alignment="CENTER_LEFT" styleClass="canvas-heading"><VBox spacing="2"><Label text="Shared canvas" styleClass="canvas-title"/><Label text="Everyone in this room sees changes in real time." styleClass="canvas-subtitle"/></VBox><Pane HBox.hgrow="ALWAYS"/><Label text="LIVE" styleClass="live-badge"/></HBox>
+            <StackPane fx:id="canvasStack" VBox.vgrow="ALWAYS" minHeight="360" styleClass="canvas-frame">
+                <Canvas fx:id="drawingCanvas" accessibleText="Shared drawing canvas"/>
+                <VBox fx:id="syncOverlay" alignment="CENTER" spacing="12" styleClass="sync-overlay" mouseTransparent="true"><ProgressIndicator maxWidth="38" maxHeight="38"/><Label text="Preparing the shared canvas" styleClass="sync-title"/><Label text="Loading the latest collaborative state…" styleClass="sync-label"/></VBox>
+            </StackPane>
+            <HBox alignment="CENTER_LEFT" spacing="7" styleClass="workspace-status"><Label fx:id="statusDot" text="●" styleClass="status-dot"/><Label fx:id="statusMessage" text="Connecting…" wrapText="true" styleClass="status-message"/></HBox>
+        </VBox>
+    </center>
+    <right>
+        <VBox spacing="14" prefWidth="250" minWidth="210" styleClass="people-panel">
+            <padding><Insets top="20" right="16" bottom="20" left="16"/></padding>
+            <HBox alignment="CENTER_LEFT"><VBox spacing="4"><Label text="PEOPLE" styleClass="panel-kicker"/><Label text="In this room" styleClass="panel-title"/></VBox><Pane HBox.hgrow="ALWAYS"/><Label text="LIVE" styleClass="participant-count"/></HBox>
+            <Label text="Participants currently connected to this canvas." wrapText="true" styleClass="helper-text"/>
+            <ListView fx:id="participants" VBox.vgrow="ALWAYS" accessibleText="People in room" styleClass="participants-list"/>
+        </VBox>
+    </right>
+</BorderPane>

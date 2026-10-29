@@ -1,0 +1,10 @@
+package com.collaborativecanvas.client.service;
+import com.collaborativecanvas.shared.dto.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.URI;import java.net.http.*;import java.time.Duration;import java.util.concurrent.*;
+public class RoomApiClient {private final HttpClient http=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();private final ObjectMapper json=new ObjectMapper().findAndRegisterModules();
+ public CompletableFuture<CreateRoomResponse> create(String base,String name){try{String body=json.writeValueAsString(new CreateRoomRequest(name));var req=HttpRequest.newBuilder(URI.create(normalize(base)+"/api/v1/rooms")).header("Content-Type","application/json").POST(HttpRequest.BodyPublishers.ofString(body)).build();return http.sendAsync(req,HttpResponse.BodyHandlers.ofString()).thenApply(r->{if(r.statusCode()!=201)throw new CompletionException(error(r.body()));try{return json.readValue(r.body(),CreateRoomResponse.class);}catch(Exception e){throw new CompletionException(e);}});}catch(Exception e){return CompletableFuture.failedFuture(e);}}
+ public CompletableFuture<RoomDetailsResponse> details(String base,String room){var req=HttpRequest.newBuilder(URI.create(normalize(base)+"/api/v1/rooms/"+room.trim())).GET().build();return http.sendAsync(req,HttpResponse.BodyHandlers.ofString()).thenApply(r->{if(r.statusCode()!=200)throw new CompletionException(error(r.body()));try{return json.readValue(r.body(),RoomDetailsResponse.class);}catch(Exception e){throw new CompletionException(e);}});}
+ private RuntimeException error(String b){try{return new IllegalArgumentException(json.readValue(b,ErrorMessage.class).message());}catch(Exception e){return new IllegalArgumentException("Server is unavailable or returned an invalid response.");}}
+ public static String normalize(String base){String n=base==null?"":base.trim().replaceAll("/+$","");if(!n.matches("https?://[^\\s]+"))throw new IllegalArgumentException("Enter a valid http:// or https:// server URL.");return n;}
+}
